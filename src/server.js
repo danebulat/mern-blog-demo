@@ -1,10 +1,32 @@
 import express from 'express';
+import cors from 'cors';
 import { db, connectToDb } from './db.js';
 
 const app = express();
 
+// -------------------------------------------------- 
+// CORS Setup
+// -------------------------------------------------- 
+
+const whiteList = ['http://localhost:5174', 'http://localhost:8000'];
+const corsOptions = {
+  origin: function(origin, callback) {
+    if (!origin || whiteList.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  }
+};
+
+app.use(cors(corsOptions));
+
 // parse json payloads and make available on req.body
 app.use(express.json());
+
+// -------------------------------------------------- 
+// GET /api/articles/:name
+// -------------------------------------------------- 
 
 app.get('/api/articles/:name', async (req, res) => {
   const { name } = req.params;
@@ -15,9 +37,13 @@ app.get('/api/articles/:name', async (req, res) => {
   if (article) {
     res.json(article);
   } else {
-    res.sendStatus(404);
+    res.sendStatus(404).json('Article Not Found');
   }
 });
+
+// -------------------------------------------------- 
+// PUT /api/articles/:name/upvote
+// -------------------------------------------------- 
 
 app.put('/api/articles/:name/upvote', async (req, res) => {
   const { name } = req.params;
@@ -30,11 +56,15 @@ app.put('/api/articles/:name/upvote', async (req, res) => {
   const article = await db.collection('articles').findOne({ name });
 
   if (article) {
-    res.send(`The ${name} article now has ${article.upvotes} upvotes`);
+    res.json(article);
   } else {
     res.send(`That article doesn't exist`);
   }
 });
+
+// -------------------------------------------------- 
+// POST /api/articles/:name/comments
+// -------------------------------------------------- 
 
 app.post('/api/articles/:name/comments', async (req, res) => {
   const { name } = req.params;
@@ -47,7 +77,7 @@ app.post('/api/articles/:name/comments', async (req, res) => {
   const article = await db.collection('articles').findOne({ name });
 
   if (article) {
-    res.send(article.comments);
+    res.json(article);
   } else {
     res.send(`That article doesn't exist`);
   }

@@ -44,7 +44,7 @@ if (Number(process.env.DEVELOPMENT_MODE) === 1) {
 // -------------------------------------------------- 
 
 // set static directory storing the react app 
-app.use(express.static(path.join(__dirname, '../dist')));
+app.use(express.static(path.join(__dirname, '../build')));
 
 // parse json payloads and make available on req.body
 app.use(express.json());

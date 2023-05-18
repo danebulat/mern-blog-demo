@@ -4,6 +4,7 @@ import admin from 'firebase-admin';
 import express from 'express';
 import cors from 'cors';
 import { db, connectToDb } from './db.js';
+import credentials from '../config/firebase.js';
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -14,10 +15,6 @@ const app = express();
 // -------------------------------------------------- 
 // Firebase Setup
 // -------------------------------------------------- 
-
-const credentials = JSON.parse(
-  fs.readFileSync('./credentials.json')
-);
 
 admin.initializeApp({ 
   credential: admin.credential.cert(credentials) 
@@ -38,7 +35,7 @@ const corsOptions = {
   }
 };
 
-if (process.env.DEVELOPMENT_MODE === 1) {
+if (Number(process.env.DEVELOPMENT_MODE) === 1) {
   app.use(cors(corsOptions));
 }
 

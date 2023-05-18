@@ -37,6 +37,9 @@ const corsOptions = {
 
 if (Number(process.env.DEVELOPMENT_MODE) === 1) {
   app.use(cors(corsOptions));
+} else {
+  // CORS-enabled for all origins
+  app.use(cors());
 }
 
 // -------------------------------------------------- 

@@ -69,7 +69,7 @@ app.use(async (req, res, next) => {
 // -------------------------------------------------- 
 
 app.get(/^(?!\/api).+/, (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
+  res.sendFile(path.join(__dirname, '../build/index.html'));
 });
 
 // -------------------------------------------------- 
